@@ -1,0 +1,86 @@
+[
+ {
+   "ID": 1,
+   "Franchise Name": "Metal",
+   "Team Name": "Aluminum",
+   "Rendered Name": "Aluminum",
+   "Logo URL": "img/logos/metal.png"
+ },
+ {
+   "ID": 2,
+   "Franchise Name": "Fifty-Fifty Pizzeria",
+   "Team Name": "Cheese Pizza",
+   "Rendered Name": "Cheese Pizza",
+   "Logo URL": "img/logos/fifty-fifty-pizzeria.png"
+ },
+ {
+   "ID": 3,
+   "Franchise Name": "Pantheon",
+   "Team Name": "Dionysus",
+   "Rendered Name": "Dionysus",
+   "Logo URL": "img/logos/pantheon.png"
+ },
+ {
+   "ID": 4,
+   "Franchise Name": "Seas Despair",
+   "Team Name": "Dutchmans Curse",
+   "Rendered Name": "Dutchmans Curse",
+   "Logo URL": "img/logos/seas-despair.png"
+ },
+ {
+   "ID": 5,
+   "Franchise Name": "The Forest",
+   "Team Name": "Giants",
+   "Rendered Name": "Giants",
+   "Logo URL": "img/logos/the-forest.png"
+ },
+ {
+   "ID": 6,
+   "Franchise Name": "Energy",
+   "Team Name": "Gravitational",
+   "Rendered Name": "Gravitational",
+   "Logo URL": "img/logos/energy.png"
+ },
+ {
+   "ID": 7,
+   "Franchise Name": "The Wavelengths",
+   "Team Name": "Microwaves",
+   "Rendered Name": "Microwaves",
+   "Logo URL": "img/logos/the-wavelengths.png"
+ },
+ {
+   "ID": 8,
+   "Franchise Name": "Puppy Paradise",
+   "Team Name": "Pugs",
+   "Rendered Name": "Pugs",
+   "Logo URL": "img/logos/puppy-paradise.png"
+ },
+ {
+   "ID": 9,
+   "Franchise Name": "The Garden",
+   "Team Name": "Pumpkins",
+   "Rendered Name": "Pumpkins",
+   "Logo URL": "img/logos/the-garden.png"
+ },
+ {
+   "ID": 10,
+   "Franchise Name": "Electric Mayhem",
+   "Team Name": "Static",
+   "Rendered Name": "Static",
+   "Logo URL": "img/logos/electric-mayhem.png"
+ },
+ {
+   "ID": 11,
+   "Franchise Name": "The Bear Den",
+   "Team Name": "Teddy Bears",
+   "Rendered Name": "Teddy Bears",
+   "Logo URL": "img/logos/the-bear-den.png"
+ },
+ {
+   "ID": 12,
+   "Franchise Name": "Minty Fresh",
+   "Team Name": "Tic Tacs",
+   "Rendered Name": "Tic Tacs",
+   "Logo URL": "img/logos/minty-fresh.png"
+ }
+]

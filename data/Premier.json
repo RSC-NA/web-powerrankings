@@ -1,0 +1,72 @@
+[
+ {
+   "ID": 1,
+   "Franchise Name": "Dungeons And Double Taps",
+   "Team Name": "Sorcerers",
+   "Rendered Name": "Sorcerers",
+   "Logo URL": "img/logos/dungeons-and-double-taps.png"
+ },
+ {
+   "ID": 2,
+   "Franchise Name": "Italian Battalion",
+   "Team Name": "Fettuccine Force",
+   "Rendered Name": "Fettuccine Force",
+   "Logo URL": "img/logos/italian-battalion.png"
+ },
+ {
+   "ID": 3,
+   "Franchise Name": "Shark Attack",
+   "Team Name": "Megalodons",
+   "Rendered Name": "Megalodons",
+   "Logo URL": "img/logos/shark-attack.png"
+ },
+ {
+   "ID": 4,
+   "Franchise Name": "Snack Syndicate",
+   "Team Name": "Cookie Capos",
+   "Rendered Name": "Cookie Capos",
+   "Logo URL": "img/logos/snack-syndicate.png"
+ },
+ {
+   "ID": 5,
+   "Franchise Name": "Storm",
+   "Team Name": "Hurricanes",
+   "Rendered Name": "Hurricanes",
+   "Logo URL": "img/logos/storm.png"
+ },
+ {
+   "ID": 6,
+   "Franchise Name": "The Jungle",
+   "Team Name": "Capybaras",
+   "Rendered Name": "Capybaras",
+   "Logo URL": "img/logos/the-jungle.png"
+ },
+ {
+   "ID": 7,
+   "Franchise Name": "The Monster Mash",
+   "Team Name": "Reapers",
+   "Rendered Name": "Reapers",
+   "Logo URL": "img/logos/the-monster-mash.png"
+ },
+ {
+   "ID": 8,
+   "Franchise Name": "The Serpents",
+   "Team Name": "Pythons",
+   "Rendered Name": "Pythons",
+   "Logo URL": "img/logos/the-serpents.png"
+ },
+ {
+   "ID": 9,
+   "Franchise Name": "The Sovereign",
+   "Team Name": "Praetorians",
+   "Rendered Name": "Praetorians",
+   "Logo URL": "img/logos/the-sovereign.png"
+ },
+ {
+   "ID": 10,
+   "Franchise Name": "The Swarm",
+   "Team Name": "Drones",
+   "Rendered Name": "Drones",
+   "Logo URL": "img/logos/the-swarm.png"
+ }
+]

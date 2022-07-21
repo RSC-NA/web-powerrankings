@@ -1,0 +1,142 @@
+[
+ {
+   "ID": 1,
+   "Franchise Name": "Puppy Paradise",
+   "Team Name": "Beagles",
+   "Rendered Name": "Beagles",
+   "Logo URL": "img/logos/puppy-paradise.png"
+ },
+ {
+   "ID": 2,
+   "Franchise Name": "The Bakery",
+   "Team Name": "Cherried Crepes",
+   "Rendered Name": "Cherried Crepes",
+   "Logo URL": "img/logos/the-bakery.png"
+ },
+ {
+   "ID": 3,
+   "Franchise Name": "Fifty-Fifty Pizzeria",
+   "Team Name": "Chicken Parm",
+   "Rendered Name": "Chicken Parm",
+   "Logo URL": "img/logos/fifty-fifty-pizzeria.png"
+ },
+ {
+   "ID": 4,
+   "Franchise Name": "The Cosmos",
+   "Team Name": "Dark Matter",
+   "Rendered Name": "Dark Matter",
+   "Logo URL": "img/logos/the-cosmos.png"
+ },
+ {
+   "ID": 5,
+   "Franchise Name": "The Elements",
+   "Team Name": "Earth",
+   "Rendered Name": "Earth",
+   "Logo URL": "img/logos/the-elements.png"
+ },
+ {
+   "ID": 6,
+   "Franchise Name": "Eight Legged Freaks",
+   "Team Name": "Funnel-Webs",
+   "Rendered Name": "Funnel-Webs",
+   "Logo URL": "img/logos/eight-legged-freaks.png"
+ },
+ {
+   "ID": 7,
+   "Franchise Name": "The Garden",
+   "Team Name": "Green Beans",
+   "Rendered Name": "Green Beans",
+   "Logo URL": "img/logos/the-garden.png"
+ },
+ {
+   "ID": 8,
+   "Franchise Name": "The Wavelengths",
+   "Team Name": "Infrared",
+   "Rendered Name": "Infrared",
+   "Logo URL": "img/logos/the-wavelengths.png"
+ },
+ {
+   "ID": 9,
+   "Franchise Name": "Metal",
+   "Team Name": "Iron",
+   "Rendered Name": "Iron",
+   "Logo URL": "img/logos/metal.png"
+ },
+ {
+   "ID": 10,
+   "Franchise Name": "The Forest",
+   "Team Name": "Jersey Devils",
+   "Rendered Name": "Jersey Devils",
+   "Logo URL": "img/logos/the-forest.png"
+ },
+ {
+   "ID": 11,
+   "Franchise Name": "The Gods",
+   "Team Name": "Kali",
+   "Rendered Name": "Kali",
+   "Logo URL": "img/logos/the-gods.png"
+ },
+ {
+   "ID": 12,
+   "Franchise Name": "The Bear Den",
+   "Team Name": "Koala Bears",
+   "Rendered Name": "Koala Bears",
+   "Logo URL": "img/logos/the-bear-den.png"
+ },
+ {
+   "ID": 13,
+   "Franchise Name": "Cheese Guild",
+   "Team Name": "Muenster Misfits",
+   "Rendered Name": "Muenster Misfits",
+   "Logo URL": "img/logos/cheese-guild.png"
+ },
+ {
+   "ID": 14,
+   "Franchise Name": "Dungeons And Double Taps",
+   "Team Name": "Peons",
+   "Rendered Name": "Peons",
+   "Logo URL": "img/logos/dungeons-and-double-taps.png"
+ },
+ {
+   "ID": 15,
+   "Franchise Name": "Pantheon",
+   "Team Name": "Shiva",
+   "Rendered Name": "Shiva",
+   "Logo URL": "img/logos/pantheon.png"
+ },
+ {
+   "ID": 16,
+   "Franchise Name": "Energy",
+   "Team Name": "Sonic",
+   "Rendered Name": "Sonic",
+   "Logo URL": "img/logos/energy.png"
+ },
+ {
+   "ID": 17,
+   "Franchise Name": "Electric Mayhem",
+   "Team Name": "Sparks",
+   "Rendered Name": "Sparks",
+   "Logo URL": "img/logos/electric-mayhem.png"
+ },
+ {
+   "ID": 18,
+   "Franchise Name": "Minty Fresh",
+   "Team Name": "Spearmint",
+   "Rendered Name": "Spearmint",
+   "Logo URL": "img/logos/minty-fresh.png"
+ },
+ {
+   "ID": 19,
+   "Franchise Name": "Seas Despair",
+   "Team Name": "The Drowned",
+   "Rendered Name": "The Drowned",
+   "Logo URL": "img/logos/seas-despair.png"
+ },
+ {
+   "ID": 20,
+   "Franchise Name": "Destined",
+   "Team Name": "Undead",
+   "Rendered Name": "Undead",
+   "Logo URL": "img/logos/destined.png"
+ }
+]
