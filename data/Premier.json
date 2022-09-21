@@ -1,10 +1,10 @@
 [
  {
    "ID": 1,
-   "Franchise Name": "Dungeons And Double Taps",
-   "Team Name": "Sorcerers",
-   "Rendered Name": "Sorcerers",
-   "Logo URL": "img/logos/dungeons-and-double-taps.png"
+   "Franchise Name": "Seas Despair",
+   "Team Name": "Annes Revenge",
+   "Rendered Name": "Annes Revenge",
+   "Logo URL": "img/logos/seas-despair.png"
  },
  {
    "ID": 2,
@@ -57,10 +57,10 @@
  },
  {
    "ID": 9,
-   "Franchise Name": "The Sovereign",
-   "Team Name": "Praetorians",
-   "Rendered Name": "Praetorians",
-   "Logo URL": "img/logos/the-sovereign.png"
+   "Franchise Name": "The Abyss",
+   "Team Name": "Blobfish",
+   "Rendered Name": "Blobfish",
+   "Logo URL": "img/logos/the-abyss.png"
  },
  {
    "ID": 10,
@@ -68,5 +68,19 @@
    "Team Name": "Drones",
    "Rendered Name": "Drones",
    "Logo URL": "img/logos/the-swarm.png"
- }
+ },
+ {
+	"ID": 11,
+	"Franchise Name": "The Bear Den",
+	"Team Name": "Gummy Bears",
+	"Rendered Name": "Gummy Bears",
+	"Logo URL": "img/logos/the-bear-den.png"
+  },
+  {
+	"ID": 12,
+	"Franchise Name": "Whale Defense",
+	"Team Name": "Orcas",
+	"Rendered Name": "Orcas",
+	"Logo URL": "img/logos/whale-defense.png"
+  }
 ]

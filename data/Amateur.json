@@ -1,58 +1,58 @@
 [
- {
-   "ID": 1,
-   "Franchise Name": "Metal",
-   "Team Name": "Brass",
-   "Rendered Name": "Brass",
-   "Logo URL": "img/logos/metal.png"
- },
- {
-   "ID": 2,
-   "Franchise Name": "Seas Despair",
-   "Team Name": "Crimson Cries",
-   "Rendered Name": "Crimson Cries",
-   "Logo URL": "img/logos/seas-despair.png"
- },
- {
-   "ID": 3,
-   "Franchise Name": "Pantheon",
-   "Team Name": "Nuwa",
-   "Rendered Name": "Nuwa",
-   "Logo URL": "img/logos/pantheon.png"
- },
- {
-   "ID": 4,
-   "Franchise Name": "The Garden",
-   "Team Name": "Potatoes",
-   "Rendered Name": "Potatoes",
-   "Logo URL": "img/logos/the-garden.png"
- },
- {
-   "ID": 5,
-   "Franchise Name": "Energy",
-   "Team Name": "Potential",
-   "Rendered Name": "Potential",
-   "Logo URL": "img/logos/energy.png"
- },
- {
-   "ID": 6,
-   "Franchise Name": "The Wavelengths",
-   "Team Name": "Radio Waves",
-   "Rendered Name": "Radio Waves",
-   "Logo URL": "img/logos/the-wavelengths.png"
- },
- {
-   "ID": 7,
-   "Franchise Name": "The Forest",
-   "Team Name": "Shurale",
-   "Rendered Name": "Shurale",
-   "Logo URL": "img/logos/the-forest.png"
- },
- {
-   "ID": 8,
-   "Franchise Name": "Puppy Paradise",
-   "Team Name": "Yorkies",
-   "Rendered Name": "Yorkies",
-   "Logo URL": "img/logos/puppy-paradise.png"
- }
+	{
+		"ID": 1,
+		"Franchise Name": "The Cosmos",
+		"Team Name": "Antimatter",
+		"Rendered Name": "Antimatter",
+		"Logo URL": "img/logos/the-cosmos.png"
+	},
+	{
+		"ID": 2,
+		"Franchise Name": "Eight Legged Freaks",
+		"Team Name": "Flic-Flacs",
+		"Rendered Name": "Flic-Flacs",
+		"Logo URL": "img/logos/eight-legged-freaks.png"
+	},
+	{
+		"ID": 3,
+		"Franchise Name": "Fifty-Fifty Pizzeria",
+		"Team Name": "House Salads",
+		"Rendered Name": "House Salads",
+		"Logo URL": "img/logos/fifty-fifty-pizzeria.png"
+	},
+	{
+		"ID": 4,
+		"Franchise Name": "Pantheon",
+		"Team Name": "Nuwa",
+		"Rendered Name": "Nuwa",
+		"Logo URL": "img/logos/pantheon.png"
+	},
+	{
+		"ID": 5,
+		"Franchise Name": "The Garden",
+		"Team Name": "Potatoes",
+		"Rendered Name": "Potatoes",
+		"Logo URL": "img/logos/the-garden.png"
+	},
+	{
+		"ID": 6,
+		"Franchise Name": "Energy",
+		"Team Name": "Potential",
+		"Rendered Name": "Potential",
+		"Logo URL": "img/logos/energy.png"
+	},
+	{
+		"ID": 7,
+		"Franchise Name": "Destined",
+		"Team Name": "Sacrificied",
+		"Rendered Name": "Sacrificied",
+		"Logo URL": "img/logos/destined.png"
+	},
+	{
+		"ID": 8,
+		"Franchise Name": "The Elements",
+		"Team Name": "Surprise",
+		"Rendered Name": "Surprise",
+		"Logo URL": "img/logos/the-elements.png"
+	}
 ]

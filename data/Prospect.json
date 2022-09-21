@@ -1,11 +1,5 @@
 [
- {
-   "ID": 1,
-   "Franchise Name": "Puppy Paradise",
-   "Team Name": "Beagles",
-   "Rendered Name": "Beagles",
-   "Logo URL": "img/logos/puppy-paradise.png"
- },
+
  {
    "ID": 2,
    "Franchise Name": "The Bakery",
@@ -16,8 +10,8 @@
  {
    "ID": 3,
    "Franchise Name": "Fifty-Fifty Pizzeria",
-   "Team Name": "Chicken Parm",
-   "Rendered Name": "Chicken Parm",
+   "Team Name": "Pepperoni Pizza",
+   "Rendered Name": "Pepperoni Pizza",
    "Logo URL": "img/logos/fifty-fifty-pizzeria.png"
  },
  {
@@ -63,25 +57,11 @@
    "Logo URL": "img/logos/metal.png"
  },
  {
-   "ID": 10,
-   "Franchise Name": "The Forest",
-   "Team Name": "Jersey Devils",
-   "Rendered Name": "Jersey Devils",
-   "Logo URL": "img/logos/the-forest.png"
- },
- {
    "ID": 11,
    "Franchise Name": "The Gods",
    "Team Name": "Kali",
    "Rendered Name": "Kali",
    "Logo URL": "img/logos/the-gods.png"
- },
- {
-   "ID": 12,
-   "Franchise Name": "The Bear Den",
-   "Team Name": "Koala Bears",
-   "Rendered Name": "Koala Bears",
-   "Logo URL": "img/logos/the-bear-den.png"
  },
  {
    "ID": 13,
@@ -124,13 +104,6 @@
    "Team Name": "Spearmint",
    "Rendered Name": "Spearmint",
    "Logo URL": "img/logos/minty-fresh.png"
- },
- {
-   "ID": 19,
-   "Franchise Name": "Seas Despair",
-   "Team Name": "The Drowned",
-   "Rendered Name": "The Drowned",
-   "Logo URL": "img/logos/seas-despair.png"
  },
  {
    "ID": 20,

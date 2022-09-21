@@ -9,15 +9,15 @@
  {
    "ID": 2,
    "Franchise Name": "The Nexus",
-   "Team Name": "Aries",
-   "Rendered Name": "Aries",
+   "Team Name": "Arcturus",
+   "Rendered Name": "Arcturus",
    "Logo URL": "img/logos/the-nexus.png"
  },
  {
    "ID": 3,
    "Franchise Name": "The Forest",
-   "Team Name": "Baba Yaga",
-   "Rendered Name": "Baba Yaga",
+   "Team Name": "Griffins",
+   "Rendered Name": "Griffins",
    "Logo URL": "img/logos/the-forest.png"
  },
  {
@@ -51,8 +51,8 @@
  {
    "ID": 8,
    "Franchise Name": "Seas Despair",
-   "Team Name": "Dark Mary",
-   "Rendered Name": "Dark Mary",
+   "Team Name": "Phantoms Deep",
+   "Rendered Name": "Phantoms Deep",
    "Logo URL": "img/logos/seas-despair.png"
  },
  {
@@ -93,8 +93,8 @@
  {
    "ID": 14,
    "Franchise Name": "The Garden",
-   "Team Name": "Mandrakes",
-   "Rendered Name": "Mandrakes",
+   "Team Name": "Strawberries",
+   "Rendered Name": "Strawberries",
    "Logo URL": "img/logos/the-garden.png"
  },
  {
