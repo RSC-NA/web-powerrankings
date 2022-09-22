@@ -88,28 +88,35 @@
 
 		<script>
 			function download_image(){
-			  var canvas = document.getElementById("powerRankings");
-			  image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-			  var link = document.createElement('a');
-			  var imageName =  document.getElementById("tier").value + "-" + document.getElementById("week").value + ".png";
-			  link.download = imageName;
-			  link.href = image;
-			  link.click();
+				var canvas = document.getElementById("powerRankings");
+				image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+				var link = document.createElement('a');
+				var imageName =  document.getElementById("tier").value + "-" + document.getElementById("week").value + ".png";
+				link.download = imageName;
+				link.href = image;
+				link.click();
 			}
+
 			$(document).ready(function() {
+
 				$(".ready").hide();
+
 				function setMaxTeams() {
 					var tier = document.getElementById("tier").value;
 					var maxTeams = 16;
+					
 					if (tier == "Amateur") {
 						maxTeams = 8;
 					}
+					
 					if (tier == "Contender") {
 						maxTeams = 12;
 					}
+
 					if (tier == "Premier") {
 						maxTeams = 10;
 					}
+
 					maxTeams = maxTeams + 1;
 					return maxTeams;
 				}
@@ -124,196 +131,212 @@
 
 					//Grab JSON
 					var tier = document.getElementById("tier").value;
-					var datapath = "data/" + tier + ".json";
+					//var datapath = "data/" + tier + ".json";
+					var datapath = 'https://api.rscstream.com/teams/' + tier;
+
 					fetch(datapath)
 					.then(function (response) {
-					return response.json();
+						return response.json();
 					})
 					.then(function (data) {
-					appendData(data);
+						appendData(data);
 					})
 					.catch(function (err) {
-					console.log('error: ' + err);
+						console.log('error: ' + err);
 					});
 
 
 					//Add amount of dropdowns as teams per tier
 					for (var teams = 1; teams < maxTeams; teams++) {
 						var teamID = "rank" + teams;
+
 						var spacer = document.createElement("div");
 						spacer.classList.add('mb-3');
+
 						var label = document.createElement("label");
-					    label.innerHTML = "Rank " + teams + " team";
-					    label.htmlFor = teamID;
-					    label.classList.add('form-label');
+						label.innerHTML = "Rank " + teams + " team";
+						label.htmlFor = teamID;
+						label.classList.add('form-label');
+
 						var select = document.createElement("select");
-		   				select.name = teamID;
-		    		    select.id = teamID;	
-		    		    select.required = true; 
-		    		    select.classList.add('form-select', 'form-select-lg', 'mb-3');
+						select.name = teamID;
+						select.id = teamID;	
+						select.required = true; 
+						select.classList.add('form-select', 'form-select-lg', 'mb-3');
 
-		    		    document.getElementById("teamDropdowns").appendChild(spacer).appendChild(label).after(select);
-		    		}
+						document.getElementById("teamDropdowns").appendChild(spacer).appendChild(label).after(select);
+					}
 
-		    		//Add team names to dropdown
-		    		function appendData(data) {
+					//Add team names to dropdown
+					function appendData(data) {
 						for (var teams = 1; teams < maxTeams; teams++) {
 							var teamID = "rank" + teams;
 							var team = document.getElementById(teamID);
-							
+
 							for (var i = 0; i < data.length; i++) {
 								var el = document.createElement("option");
-								el.textContent = data[i]["Team Name"];
-								el.value = data[i]["Rendered Name"];
+								el.textContent = data[i]["teamName"];
+								el.value = data[i]["teamName"];
 								team.appendChild(el);
 							}
 						}
 					}
-	    		});
-			});
-		</script>
-		<script>
-		document.getElementById("submit").addEventListener("click", function(event){
-			event.preventDefault();
-			const teamName = [];
-			const franchiseName = [];
-			const logoUrl = [];
 
-			function setMaxTeams() {
+				});
+			});
+
+			document.getElementById("submit").addEventListener("click", function(event){
+				event.preventDefault();
+				const teamName = [];
+				const franchiseName = [];
+				const logoUrl = [];
+
+				function setMaxTeams() {
+					var tier = document.getElementById("tier").value;
+					var maxTeams = 16;
+					
+					if (tier == "Amateur") {
+						maxTeams = 8;
+					}
+					
+					if (tier == "Contender") {
+						maxTeams = 12;
+					}
+					
+					if (tier == "Premier") {
+						maxTeams = 10;
+					}
+					
+					maxTeams = maxTeams + 1;
+					return maxTeams;
+				}
+
+				//Get JSON
 				var tier = document.getElementById("tier").value;
-				var maxTeams = 16;
-				if (tier == "Amateur") {
-					maxTeams = 8;
-				}
-				if (tier == "Contender") {
-					maxTeams = 12;
-				}
-				if (tier == "Premier") {
-					maxTeams = 10;
-				}
-				maxTeams = maxTeams + 1;
-				return maxTeams;
-			}
+				
+				//var datapath = "data/" + tier + ".json";
+				var datapath = 'https://api.rscstream.com/teams/' + tier;
+				
+				fetch(datapath)
+				.then(function (response) {
+					return response.json();
+				})
+				.then(function (data) {
+					grabNames(data);
+				})
+				.catch(function (err) {
+					console.log('error: ' + err);
+				});
 
-			//Get JSON
-			var tier = document.getElementById("tier").value;
-			var datapath = "data/" + tier + ".json";
-			fetch(datapath)
-			.then(function (response) {
-			return response.json();
-			})
-			.then(function (data) {
-			grabNames(data);
-			})
-			.catch(function (err) {
-			console.log('error: ' + err);
-			});
-			//Get Names
-			function grabNames(data) {
-				var maxTeams = setMaxTeams();
-				for (var teams = 1; teams < maxTeams; teams++) {
-					teamID = "rank" + teams;
-					var team = document.getElementById(teamID);
-					teamName[teams] = team.value;
-					for (var i = 0; i < data.length; i++) {
-						if (data[i]["Rendered Name"] == teamName[teams]){
-							franchiseName[teams] = data[i]["Franchise Name"];
-							logoUrl[teams] = data[i]["Logo URL"];
+				//Get Names
+				function grabNames(data) {
+					var maxTeams = setMaxTeams();
+					for (var teams = 1; teams < maxTeams; teams++) {
+						teamID = "rank" + teams;
+						var team = document.getElementById(teamID);
+						teamName[teams] = team.value;
+						for (var i = 0; i < data.length; i++) {
+							if (data[i]["teamName"] == teamName[teams]){
+								franchiseName[teams] = data[i]["franchise"];
+								var franUrl = data[i]["franchise"].replaceAll(' ', '-').toLowerCase();
+								logoUrl[teams] = `img/logos/${franUrl}.png`;
+							}
 						}
 					}
-				}
-				//Generate Image
-				$("#powerRankings").show();
-				$(".empty").hide();
-				$(".ready").show();
-				var canvas = document.getElementById("powerRankings");
-				var ctx = canvas.getContext("2d");
-				var tier = document.getElementById("tier").value;
-				var week = "Season 13, " + document.getElementById("week").value;
-				
-				canvas.width = 1080;
-				canvas.height = 1350;
-				var background = new Image();
-				background.src = "img/background.png";
-				background.addEventListener("load", function() {
-				ctx.drawImage(background,0,0);
-				var logo = new Array();
-				var logoy = 346;
-				var teamy = 380;
-				var franchisey = teamy + 25;
-				var logox = 115;
-				var textx = 226;
-				for (var teams = 1; teams < maxTeams; teams++) {
-					if (teams == 9) {
-						logox = 620;
-						textx = 729
-						logoy = 346;
-						teamy = 380;
-						franchisey = teamy + 25;
-					}
-					logo[teams] = new Image();
-					logo[teams].src = logoUrl[teams];
-					ctx.drawImage(logo[teams],logox,logoy,75,75);
-					logoy = logoy + 125;
-					ctx.font="bold 24px Poppins";
-					ctx.fillText(teamName[teams].toUpperCase(),textx,teamy);
-					ctx.font="17px Poppins";
-					ctx.fillText(franchiseName[teams].toUpperCase(),textx,franchisey);
-					teamy = teamy + 125;
-					franchisey = teamy + 25;
-				}
 
-				//Tier Text
-				var hex = "#FFFFFF";
-				var texthex = "#000000";
-				if (tier == "Premier"){
-					hex = "#d600d6";
-				}
-				if (tier == "Master"){
-					hex = "#9B59B6";
-					texthex = "#FFFFFF";
-				}
-				if (tier == "Elite"){
-					hex = "#3498db";
-				}
-				if (tier == "Veteran"){
-					hex = "#33ffda";
-				}
-				if (tier == "Rival"){
-					hex = "#2ecc71";
-				}
-				if (tier == "Challenger"){
-					hex = "#ceb337";
-				}
-				if (tier == "Prospect"){
-					hex = "#e67e22";
-				}
-				if (tier == "Contender"){
-					hex = "#d64694";
-				}
-				if (tier == "Amateur"){
-					hex = "#f3a9a9";
-				}
+					//Generate Image
+					$("#powerRankings").show();
+					$(".empty").hide();
+					$(".ready").show();
+					var canvas = document.getElementById("powerRankings");
+					var ctx = canvas.getContext("2d");
+					var tier = document.getElementById("tier").value;
+					var week = "Season 15, " + document.getElementById("week").value;
+
+					canvas.width = 1080;
+					canvas.height = 1350;
+					var background = new Image();
+					background.src = "img/background.png";
+					background.addEventListener("load", function() {
+						ctx.drawImage(background,0,0);
+						var logo = new Array();
+						var logoy = 346;
+						var teamy = 380;
+						var franchisey = teamy + 25;
+						var logox = 115;
+						var textx = 226;
+						for (var teams = 1; teams < maxTeams; teams++) {
+							if (teams == 9) {
+								logox = 620;
+								textx = 729
+								logoy = 346;
+								teamy = 380;
+								franchisey = teamy + 25;
+							}
+
+							logo[teams] = new Image();
+							logo[teams].src = logoUrl[teams];
+							ctx.drawImage(logo[teams],logox,logoy,75,75);
+							logoy = logoy + 125;
+							ctx.font="bold 24px Poppins";
+							ctx.fillText(teamName[teams].toUpperCase(),textx,teamy);
+							ctx.font="17px Poppins";
+							ctx.fillText(franchiseName[teams].toUpperCase(),textx,franchisey);
+							teamy = teamy + 125;
+							franchisey = teamy + 25;
+						}
+
+						//Tier Text
+						var hex = "#FFFFFF";
+						var texthex = "#000000";
+						if (tier == "Premier"){
+							hex = "#d600d6";
+						}
+						if (tier == "Master"){
+							hex = "#9B59B6";
+							texthex = "#FFFFFF";
+						}
+						if (tier == "Elite"){
+							hex = "#3498db";
+						}
+						if (tier == "Veteran"){
+							hex = "#33ffda";
+						}
+						if (tier == "Rival"){
+							hex = "#2ecc71";
+						}
+						if (tier == "Challenger"){
+							hex = "#ceb337";
+						}
+						if (tier == "Prospect"){
+							hex = "#e67e22";
+						}
+						if (tier == "Contender"){
+							hex = "#d64694";
+						}
+						if (tier == "Amateur"){
+							hex = "#f3a9a9";
+						}
 
 
-				ctx.fillStyle = hex;
-				ctx.fillRect(95, 75, 340, 60);
-				ctx.beginPath();
-				ctx.arc(95, 105, 30, 0, 2 * Math.PI);
-				ctx.arc(435, 105, 30, 0, 2 * Math.PI);
-				ctx.fillStyle = hex;
-				ctx.fill();
-				ctx.font="bold 42px Poppins";
-				ctx.fillStyle = texthex;
-				ctx.textAlign = "center";
-				ctx.fillText(tier.toUpperCase(),265,120);
-				ctx.font="42px Poppins";
-				ctx.fillStyle = "#FFFFFF";
-				ctx.textAlign = "left";
-				ctx.fillText(week.toUpperCase(),65,260);
-				}, false);
-			}
-		});
+						ctx.fillStyle = hex;
+						ctx.fillRect(95, 75, 340, 60);
+						ctx.beginPath();
+						ctx.arc(95, 105, 30, 0, 2 * Math.PI);
+						ctx.arc(435, 105, 30, 0, 2 * Math.PI);
+						ctx.fillStyle = hex;
+						ctx.fill();
+						ctx.font="bold 42px Poppins";
+						ctx.fillStyle = texthex;
+						ctx.textAlign = "center";
+						ctx.fillText(tier.toUpperCase(),265,120);
+						ctx.font="42px Poppins";
+						ctx.fillStyle = "#FFFFFF";
+						ctx.textAlign = "left";
+						ctx.fillText(week.toUpperCase(),65,260);
+					}, false);
+				}
+			});
 		</script>
 	</body>
 </html>

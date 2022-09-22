@@ -1,0 +1,86 @@
+[
+ {
+   "ID": 1,
+   "Franchise Name": "Seas Despair",
+   "Team Name": "Annes Revenge",
+   "Rendered Name": "Annes Revenge",
+   "Logo URL": "img/logos/seas-despair.png"
+ },
+ {
+   "ID": 2,
+   "Franchise Name": "Italian Battalion",
+   "Team Name": "Fettuccine Force",
+   "Rendered Name": "Fettuccine Force",
+   "Logo URL": "img/logos/italian-battalion.png"
+ },
+ {
+   "ID": 3,
+   "Franchise Name": "Shark Attack",
+   "Team Name": "Megalodons",
+   "Rendered Name": "Megalodons",
+   "Logo URL": "img/logos/shark-attack.png"
+ },
+ {
+   "ID": 4,
+   "Franchise Name": "Snack Syndicate",
+   "Team Name": "Cookie Capos",
+   "Rendered Name": "Cookie Capos",
+   "Logo URL": "img/logos/snack-syndicate.png"
+ },
+ {
+   "ID": 5,
+   "Franchise Name": "Storm",
+   "Team Name": "Hurricanes",
+   "Rendered Name": "Hurricanes",
+   "Logo URL": "img/logos/storm.png"
+ },
+ {
+   "ID": 6,
+   "Franchise Name": "The Jungle",
+   "Team Name": "Capybaras",
+   "Rendered Name": "Capybaras",
+   "Logo URL": "img/logos/the-jungle.png"
+ },
+ {
+   "ID": 7,
+   "Franchise Name": "The Monster Mash",
+   "Team Name": "Reapers",
+   "Rendered Name": "Reapers",
+   "Logo URL": "img/logos/the-monster-mash.png"
+ },
+ {
+   "ID": 8,
+   "Franchise Name": "The Serpents",
+   "Team Name": "Pythons",
+   "Rendered Name": "Pythons",
+   "Logo URL": "img/logos/the-serpents.png"
+ },
+ {
+   "ID": 9,
+   "Franchise Name": "The Abyss",
+   "Team Name": "Blobfish",
+   "Rendered Name": "Blobfish",
+   "Logo URL": "img/logos/the-abyss.png"
+ },
+ {
+   "ID": 10,
+   "Franchise Name": "The Swarm",
+   "Team Name": "Drones",
+   "Rendered Name": "Drones",
+   "Logo URL": "img/logos/the-swarm.png"
+ },
+ {
+	"ID": 11,
+	"Franchise Name": "The Bear Den",
+	"Team Name": "Gummy Bears",
+	"Rendered Name": "Gummy Bears",
+	"Logo URL": "img/logos/the-bear-den.png"
+  },
+  {
+	"ID": 12,
+	"Franchise Name": "Whale Defense",
+	"Team Name": "Orcas",
+	"Rendered Name": "Orcas",
+	"Logo URL": "img/logos/whale-defense.png"
+  }
+]
