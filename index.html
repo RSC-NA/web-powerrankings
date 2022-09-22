@@ -66,15 +66,15 @@
 				<div class="col-md-8 p-5">
 					<h2 class="h2 mt-3 mb-3">Image Preview</h2>
 					<div class="alert alert-dismissible alert-info empty">
-	                	<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-	                	Generate the image by filling out the form in order to see the preview. You can download the image or copy/paste the image directly into discord once the image has been generated.
-	                </div>
-	                <div class="alert alert-dismissible alert-info ready">
-	                	<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-	                	You can download the generated image, or right click and copy the image to paste directly into discord. <br /><br />
-	                	<button type="button" class="btn btn-secondary" onclick="download_image()">Download Image</button>
-	                </div>
-	                
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+						Generate the image by filling out the form in order to see the preview. You can download the image or copy/paste the image directly into discord once the image has been generated.
+					</div>
+					<div class="alert alert-dismissible alert-info ready">
+						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+						You can download the generated image, or right click and copy the image to paste directly into discord. <br /><br />
+						<button type="button" class="btn btn-secondary" onclick="download_image()">Download Image</button>
+					</div>
+					
 					<canvas id="powerRankings">
 						Your browser does not support the canvas element.
 					</canvas>
@@ -319,7 +319,6 @@
 						if (tier == "Amateur"){
 							hex = "#f3a9a9";
 						}
-
 
 						ctx.fillStyle = hex;
 						ctx.fillRect(95, 75, 340, 60);
