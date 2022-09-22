@@ -41,34 +41,34 @@
 	"Franchise Name": "The Cosmos",
 	"Team Name": "Planetary",
 	"Rendered Name": "Planetary",
-	"Logo URL": "/img/logos/the-cosmos.png"
+	"Logo URL": "img/logos/the-cosmos.png"
  },
  {
 	"ID": 7,
 	"Franchise Name": "The Elements",
 	"Team Name": "Ice",
 	"Rendered Name": "Ice",
-	"Logo URL": "/img/logos/the-elements.png"
+	"Logo URL": "img/logos/the-elements.png"
  },
  {
 	"ID": 8,
 	"Franchise Name": "Eight Legged Freaks",
 	"Team Name": "Hobo Spiders",
 	"Rendered Name": "Hobo Spiders",
-	"Logo URL": "/img/logos/eight-legged-freaks.png"
+	"Logo URL": "img/logos/eight-legged-freaks.png"
  },
  {
 	"ID": 9,
 	"Franchise Name": "Destined",
 	"Team Name": "Devoured",
 	"Rendered Name": "Devoured",
-	"Logo URL": "/img/logos/destined.png"
+	"Logo URL": "img/logos/destined.png"
  },
  {
 	"ID": 10,
 	"Franchise Name": "Dungeons and Double Taps",
 	"Team Name": "Clerics",
 	"Rendered Name": "Clerics",
-	"Logo URL": "/img/logos/dungeons-and-double-taps.png"
+	"Logo URL": "img/logos/dungeons-and-double-taps.png"
  }
 ]
