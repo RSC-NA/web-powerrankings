@@ -10,6 +10,9 @@
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
 		<link href="css/rsctheme.css" rel="stylesheet">
 		<title>Power Rankings Image Generator</title>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<script src="./js/powerrankings.js" defer></script>
 	</head>
 	<body>
 		<!-- TABLE CONSTRUCTION-->
@@ -17,65 +20,77 @@
 			<!-- Content here -->
 			<div class = "row">
 				<div class="col-md-4 bg-dark p-5">
-					<form class="mb-5" action="">
-						<h1 class="h1">Power Rankings Image Generator</h1>
-						<div class="mb-3">
-							<label for="tier" class="form-label">Tier</label>
-							<select class="form-select form-select-lg mb-3" name="tier" id="tier" required="true">
-								<option disabled hidden value="" selected>Select a tier</option>
-								<option value="Premier">Premier</option>
-								<option value="Master">Master</option>
-								<option value="Elite">Elite</option>
-								<option value="Veteran">Veteran</option>
-								<option value="Rival">Rival</option>
-								<option value="Challenger">Challenger</option>
-								<option value="Prospect">Prospect</option>
-								<option value="Contender">Contender</option>
-								<option value="Amateur">Amateur</option>
-							</select>
-						</div>
-						<div class="mb-3">
+				
+					<div id="setup_form_panel" class="d-none">
+						<form id="setup_form" class="mb-5" action="">
+							<h1 class="h1">Power Rankings Setup</h1>
+							<div class="mb-3">
+								<label for="season" class="form-label">
+									RSC Season
+								</label>
+								<input type="text" name="season" id="season"
+									class="form-control form-text">
+							</div>
+							<div class="d-grid gap-2">
+								<input id="save_settings" 
+									class="btn btn-primary btn-lg mt-3"
+									type="submit" value="Save Settings">
+							</div>
+						</form>
+					</div>
+					
+					<!-- powerrankings form -->
+					<div id="pr_form_panel" class="d-none">
+						<form id="pr_form" class="mb-5" action="">
+							<h1 class="h1">Power Rankings Image Generator</h1>
+							<div class="mb-3">
 							<label for="week" class="form-label">Week</label>
 							<select class="form-select form-select-lg mb-3" name="week" id="week" required="true">
-								<option value="Week One">Week One</option>
-								<option value="Week Two">Week Two</option>
-								<option value="Week Three">Week Three</option>
-								<option value="Week Four">Week Four</option>
-								<option value="Week Five">Week Five</option>
-								<option value="Week Six">Week Six</option>
-								<option value="Week Seven">Week Seven</option>
-								<option value="Week Eight">Week Eight</option>
-								<option value="Week Nine">Week Nine</option>
-								<option value="Week Ten">Week Ten</option>
-								<option value="Week Eleven">Week Eleven</option>
-								<option value="Week Twelve">Week Twelve</option>
-								<option value="Week Thirteen">Week Thirteen</option>
-								<option value="Week Fourteen">Week Fourteen</option>
-								<option value="Week Fifteen">Week Fifteen</option>
-								<option value="Week Sixteen">Week Sixteen</option>
+								<option value="1">Week One</option>
+								<option value="2">Week Two</option>
+								<option value="3">Week Three</option>
+								<option value="4">Week Four</option>
+								<option value="5">Week Five</option>
+								<option value="6">Week Six</option>
+								<option value="7">Week Seven</option>
+								<option value="8">Week Eight</option>
+								<option value="9">Week Nine</option>
+								<option value="10">Week Ten</option>
+								<option value="11">Week Eleven</option>
+								<option value="12">Week Twelve</option>
+								<option value="13">Week Thirteen</option>
+								<option value="14">Week Fourteen</option>
+								<option value="15">Week Fifteen</option>
+								<option value="16">Week Sixteen</option>
 							</select>
-						</div>
-						<div id="teamDropdowns">
-						</div>
+							</div>
+							<div class="mb-3">
+								<label for="tier" class="form-label">Tier</label>
+								<select class="form-select form-select-lg mb-3" name="tier" id="tier" required="true">
+									<option disabled value="" selected>Select a tier</option>
+								</select>
+							</div>
+							<div id="teamDropdowns">
+							</div>
+							<!--
+							<div class="d-grid gap-2">
+								<input id="submit" class="btn btn-primary btn-lg mt-3" type="submit" value="Generate Image">
+							</div>
+							-->
+						</form>
 
-						<div class="d-grid gap-2">
-							<input id="submit" class="btn btn-primary btn-lg mt-3" type="submit" value="Generate Image">
-						</div>
-					</form>
+						<a href="#" id="change_season">Change Season</a>
+					</div>
 				</div>
 				<div class="col-md-8 p-5">
 					<h2 class="h2 mt-3 mb-3">Image Preview</h2>
-					<div class="alert alert-dismissible alert-info empty">
-						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-						Generate the image by filling out the form in order to see the preview. You can download the image or copy/paste the image directly into discord once the image has been generated.
-					</div>
-					<div class="alert alert-dismissible alert-info ready">
+					<div class="alert alert-dismissible alert-info ready hidden">
 						<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 						You can download the generated image, or right click and copy the image to paste directly into discord. <br /><br />
-						<button type="button" class="btn btn-secondary" onclick="download_image()">Download Image</button>
+						<button type="button" class="btn btn-secondary" id="download_image">Download Image</button>
 					</div>
 					
-					<canvas id="powerRankings">
+					<canvas id="powerrankings">
 						Your browser does not support the canvas element.
 					</canvas>
 				</div>
@@ -83,262 +98,5 @@
 		</div>
 		<span id="loader" style="font-family: Poppins; font-weight: 700; display: none;">I am used for loading</span>
 		<span id="loader2" style="font-family: Poppins; font-weight: 300; display: none;">I am used for loading</span>
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-		<script>
-			var season = 17; // Change this when there is a new season. :D
-
-			function download_image(){
-				var canvas = document.getElementById("powerRankings");
-				image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-				var link = document.createElement('a');
-				var imageName =  document.getElementById("tier").value + "-" + document.getElementById("week").value + ".png";
-				link.download = imageName;
-				link.href = image;
-				link.click();
-			}
-
-			$(document).ready(function() {
-
-				$(".ready").hide();
-
-				function setMaxTeams() {
-					var tier = document.getElementById("tier").value;
-					var maxTeams = 16;
-					
-					if (tier == "Amateur") {
-						maxTeams = 8;
-					}
-					
-					if (tier == "Contender") {
-						maxTeams = 12;
-					}
-
-					if (tier == "Premier") {
-						maxTeams = 12;
-					}
-
-					maxTeams = maxTeams + 1;
-					return maxTeams;
-				}
-
-				//Add Dropdowns
-				$( "#tier" ).change(function() {
-					$("#powerRankings").hide();
-					$(".empty").show();
-					$(".ready").hide();
-					document.getElementById("teamDropdowns").innerHTML = "";
-					var maxTeams = setMaxTeams();
-
-					//Grab JSON
-					var tier = document.getElementById("tier").value;
-					//var datapath = "data/" + tier + ".json";
-					//var datapath = 'https://api.rscstream.com/teams/' + tier;
-					var datapath = 'https://devleague.rscstream.com/teams/' + tier;
-
-					fetch(datapath)
-					.then(function (response) {
-						return response.json();
-					})
-					.then(function (data) {
-						appendData(data);
-					})
-					.catch(function (err) {
-						console.log('error: ' + err);
-					});
-
-
-					//Add amount of dropdowns as teams per tier
-					for (var teams = 1; teams < maxTeams; teams++) {
-						var teamID = "rank" + teams;
-
-						var spacer = document.createElement("div");
-						spacer.classList.add('mb-3');
-
-						var label = document.createElement("label");
-						label.innerHTML = "Rank " + teams + " team";
-						label.htmlFor = teamID;
-						label.classList.add('form-label');
-
-						var select = document.createElement("select");
-						select.name = teamID;
-						select.id = teamID;	
-						select.required = true; 
-						select.classList.add('form-select', 'form-select-lg', 'mb-3');
-
-						document.getElementById("teamDropdowns").appendChild(spacer).appendChild(label).after(select);
-					}
-
-					//Add team names to dropdown
-					function appendData(data) {
-						for (var teams = 1; teams < maxTeams; teams++) {
-							var teamID = "rank" + teams;
-							var team = document.getElementById(teamID);
-
-							for (var i = 0; i < data.length; i++) {
-								var el = document.createElement("option");
-								el.textContent = data[i]["teamName"];
-								el.value = data[i]["teamName"];
-								team.appendChild(el);
-							}
-						}
-					}
-
-				});
-			});
-
-			document.getElementById("submit").addEventListener("click", function(event){
-				event.preventDefault();
-				const teamName = [];
-				const franchiseName = [];
-				const logoUrl = [];
-
-				function setMaxTeams() {
-					var tier = document.getElementById("tier").value;
-					var maxTeams = 16;
-					
-					if (tier == "Amateur") {
-						maxTeams = 8;
-					}
-					
-					if (tier == "Contender") {
-						maxTeams = 12;
-					}
-					
-					if (tier == "Premier") {
-						maxTeams = 12;
-					}
-					
-					maxTeams = maxTeams + 1;
-					return maxTeams;
-				}
-
-				//Get JSON
-				var tier = document.getElementById("tier").value;
-
-				//var datapath = "data/" + tier + ".json";
-				var datapath = 'https://devleague.rscstream.com/teams/' + tier;
-				
-				fetch(datapath)
-				.then(function (response) {
-					return response.json();
-				})
-				.then(function (data) {
-					grabNames(data);
-				})
-				.catch(function (err) {
-					console.log('error: ' + err);
-				});
-
-				//Get Names
-				function grabNames(data) {
-					var maxTeams = setMaxTeams();
-					for (var teams = 1; teams < maxTeams; teams++) {
-						teamID = "rank" + teams;
-						var team = document.getElementById(teamID);
-						teamName[teams] = team.value;
-						for (var i = 0; i < data.length; i++) {
-							if (data[i]["teamName"] == teamName[teams]){
-								franchiseName[teams] = data[i]["franchise"];
-								var franUrl = data[i]["franchise"].replaceAll(' ', '-').toLowerCase();
-								logoUrl[teams] = `img/logos/${franUrl}.png`;
-							}
-						}
-					}
-
-					//Generate Image
-					$("#powerRankings").show();
-					$(".empty").hide();
-					$(".ready").show();
-					var canvas = document.getElementById("powerRankings");
-					var ctx = canvas.getContext("2d");
-					var tier = document.getElementById("tier").value;
-					var week = "Season " + season + ", " + document.getElementById("week").value;
-
-					canvas.width = 1080;
-					canvas.height = 1350;
-					var background = new Image();
-					background.src = "img/background.png";
-					background.addEventListener("load", function() {
-						ctx.drawImage(background,0,0);
-						var logo = new Array();
-						var logoy = 346;
-						var teamy = 380;
-						var franchisey = teamy + 25;
-						var logox = 115;
-						var textx = 226;
-						for (var teams = 1; teams < maxTeams; teams++) {
-							if (teams == 9) {
-								logox = 620;
-								textx = 729;
-								logoy = 346;
-								teamy = 380;
-								franchisey = teamy + 25;
-							}
-
-							logo[teams] = new Image();
-							logo[teams].src = logoUrl[teams];
-							ctx.drawImage(logo[teams],logox,logoy,75,75);
-							logoy = logoy + 125;
-							ctx.font="bold 24px Poppins";
-							ctx.fillText(teamName[teams].toUpperCase(),textx,teamy);
-							ctx.font="17px Poppins";
-							ctx.fillText(franchiseName[teams].toUpperCase(),textx,franchisey);
-							teamy = teamy + 125;
-							franchisey = teamy + 25;
-						}
-
-						//Tier Text
-						var hex = "#FFFFFF";
-						var texthex = "#000000";
-						if (tier == "Premier"){
-							hex = "#d600d6";
-						}
-						if (tier == "Master"){
-							hex = "#9B59B6";
-							texthex = "#FFFFFF";
-						}
-						if (tier == "Elite"){
-							hex = "#3498db";
-						}
-						if (tier == "Veteran"){
-							hex = "#33ffda";
-						}
-						if (tier == "Rival"){
-							hex = "#2ecc71";
-						}
-						if (tier == "Challenger"){
-							hex = "#ceb337";
-						}
-						if (tier == "Prospect"){
-							hex = "#e67e22";
-						}
-						if (tier == "Contender"){
-							hex = "#d64694";
-						}
-						if (tier == "Amateur"){
-							hex = "#f3a9a9";
-						}
-
-						ctx.fillStyle = hex;
-						ctx.fillRect(95, 75, 340, 60);
-						ctx.beginPath();
-						ctx.arc(95, 105, 30, 0, 2 * Math.PI);
-						ctx.arc(435, 105, 30, 0, 2 * Math.PI);
-						ctx.fillStyle = hex;
-						ctx.fill();
-						ctx.font="bold 42px Poppins";
-						ctx.fillStyle = texthex;
-						ctx.textAlign = "center";
-						ctx.fillText(tier.toUpperCase(),265,120);
-						ctx.font="42px Poppins";
-						ctx.fillStyle = "#FFFFFF";
-						ctx.textAlign = "left";
-						ctx.fillText(week.toUpperCase(),65,260);
-					}, false);
-				}
-			});
-		</script>
 	</body>
 </html>

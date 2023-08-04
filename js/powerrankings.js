@@ -1,0 +1,459 @@
+// Application Loading Flow
+// 1. DOMContentLoaded Event
+// 2. Bind Listeners for user input
+// 3. load_saved_session() [localStorage lookup]
+// 4. fetch_resources() -> fetch_tiers_and_teams() [web fetch()]
+// 5. set_application_state() -> show_setup_form() | show_pr_form()
+//
+// Event handle_setup_form() [<form submit>]
+// 1. save_pr_data() - save current PR object to localStorage
+// 2. set_application_state() - show_setup_form() |  show_pr_form()
+//
+// Event handle_pr_form() [<form submit>]
+// 1. (nothing)
+//
+// Event handle_week_select() [<select change>]
+// 1. load_pr_form_data() - clear and generate DOM form elements
+//
+// Event handle_tier_select() [<select change>]
+// 1. Add TIERS to PR.working if it is empty
+// 2. Set PR.current_tier to selected tier
+// 3. load_pr_form_data()
+//
+// Event handle_pr_form_changes() [<select change>]
+// 1. Grab current value / rank of team.
+// 2. Store in PR.working[ $TIER ][ $RANK ] = $TEAMNAME;
+// 3. save_pr_data()
+// 4. render() [TODO]
+//
+
+/*
+ * // working is the "week"
+ * working: {
+ * 		"Premier": [ null, "Anglers", "Whatevers", "Somethings" ],
+ * 		"Master": [ null, "Anglers", "Whatevers", "Somethings" ],
+ * },
+ * data: {
+ * 		17: { 1: {}, 2: {}, ... 16: {} }
+ * 		18: { 1: {}, 2: {}, } (last element is "working")
+ * }
+ *
+ */
+const PR = {
+	season: null,
+	current_week: 1,
+	current_tier: null,
+	working: {},
+	data: {},
+};
+
+// storage element for our current tiers (pulled from API)
+let DATA_READY = false;
+const TIERS    = [];
+const TEAMS    = {};
+const TEAM_MAP = {};
+const LOGOS    = {}; // object pool for our images
+
+// single object to store our rendered image in
+let RENDERED = null;
+
+// tier colors
+const COLORS = {
+	'Premier': '#d600d6',
+	'Master': '#9b59b6',
+	'Elite': '#3498db',
+	'Veteran': '#33ffda',
+	'Rival': '#2ecc71',
+	'Challenger': '#ceb337',
+	'Prospect': '#e67e22',
+	'Contender': '#d64694',
+	'Amateur': '#f3a9a9',
+};
+
+// main program entry point. DOMContentLoaded
+// attaches event handlers, then kicks off with 
+// load_saved_session();
+document.addEventListener('DOMContentLoaded', () => {
+	document.getElementById('setup_form').addEventListener('submit', handle_setup_form);
+	document.getElementById('pr_form').addEventListener('submit', handle_pr_form);
+	document.getElementById('week').addEventListener('change', handle_week_select);
+	document.getElementById('tier').addEventListener('change', handle_tier_select);
+	document.getElementById('pr_form').addEventListener('change', handle_pr_form_changes);
+	document.getElementById('download_image').addEventListener('click', download_image);
+	document.getElementById('change_season').addEventListener('click', change_season);
+
+	// set up the application once DOM is loaded
+	fetch_resources();
+	load_saved_session();
+	set_application_state();
+});
+
+function download_image() {
+	const canvas = document.getElementById('powerrankings');
+	image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+	const link = document.createElement('a');
+	const imageName = `${document.getELementById('tier').value}-${document.getElementById('week').value}.png`;
+	link.download = imageName;
+	link.href = image;
+	link.click();
+}
+
+function change_season() {
+	save_pr_data();
+
+	PR.season = null;
+	PR.current_tier = null;
+	PR.current_week = null;
+	PR.working = {};
+	PR.data = {};
+
+	set_application_state();
+}
+
+// pulls saved state out of localstorage
+function load_saved_session() {
+	const saved_pr = JSON.parse(localStorage.getItem('rsc_powerrankings'));
+	if ( saved_pr ) {
+		PR.season = saved_pr.season;
+		PR.working = saved_pr.working;
+		PR.data = saved_pr.data;
+		PR.current_week = saved_pr.current_week;
+		PR.current_tier = saved_pr.current_tier;
+	}
+
+	////console.log('loading season data from storage', saved_pr);
+}
+
+// decides what form elements to show, presets
+// any stored fields, populates inputs, etc
+function set_application_state() {
+	if ( PR.season === null || PR.season === undefined ) {
+		show_setup_form()
+	} else {
+		show_pr_form();
+	}
+
+	if ( PR.current_tier !== null || PR.current_tier !== undefined ) {
+		// TODO(erh): Loading spinner...
+
+		if ( DATA_READY ) { // data is here, we can safely load
+			return load_pr_form_data(); 
+		}
+		return setTimeout(function() { load_pr_form_data(1) }, 200 );
+	}
+}
+
+function show_setup_form() {
+	//console.log('Loading setup form');
+	document.getElementById('setup_form_panel').classList.remove('d-none');
+	document.getElementById('pr_form_panel').classList.add('d-none');
+}
+
+function show_pr_form() {
+	//console.log('Loading PR form');
+	document.getElementById('setup_form_panel').classList.add('d-none');
+	document.getElementById('pr_form_panel').classList.remove('d-none');
+
+	const weeks = document.getElementById('week').options;
+	for ( let i = 0; i < weeks.length; ++i ) {
+		const week_val = parseInt(weeks[i].value);
+		if ( week_val === PR.current_week ) {
+			document.getElementById('week').selectedIndex = i;
+			break;
+		}
+	}
+}
+
+function save_pr_data() {
+	localStorage.setItem('rsc_powerrankings', JSON.stringify(PR));
+
+	return true;
+}
+
+function get_max_teams() {
+	return DATA_READY && PR.current_tier ? 
+		Math.min(Math.max(TEAMS[PR.current_tier].length, 8), 16) : 0;
+}
+
+function load_pr_form_data(attempts = 1) {
+	// prevent possible race condition where we're trying to draw
+	// the form before our data is available from the API.
+	if ( ! DATA_READY ) {
+		if ( attempts < 10 ) {
+			//console.log('decaying...', attempts);
+			const decay = attempts * 50;
+			return setTimeout(() => { load_pr_form_data(attempts + 1) }, decay);
+		} else {
+			// TODO(erh): notify user that there was an error.
+			// try again, then ping me
+			//console.log('dead...', attempts);
+			return console.error('API error. Contact tehblister.');
+		}
+	} else if ( PR.current_tier && ! (PR.current_tier in TEAMS) ) {
+		console.info("Huh?");
+		console.info(PR.current_tier, TEAMS);
+		return setTimeout(() => { load_pr_form_data(attempts + 1); }, 200);
+	}
+
+	if ( ! PR.season ) {
+		return;
+	}
+
+	if ( ! PR.current_tier ) {
+		return;
+	}
+
+	const team_form = document.getElementById('teamDropdowns');
+	team_form.innerHTML = '';
+
+	const max_teams = get_max_teams();
+
+	let team_options = '<option disabled selected>Select a team</option>';
+	const team_index_map = {};
+	//console.log(PR, PR.current_tier, DATA_READY, TEAMS);
+	//console.log("TEAMS", TEAMS);
+	for ( let i = 0; i < TEAMS[ PR.current_tier ].length; ++i ) {
+		const team = TEAMS[ PR.current_tier ][i];
+		team_options += `
+		<option value="${team.teamName}">${team.teamName}</option>
+		`;
+		team_index_map[ team.teamName ] = i;
+	}
+
+	//console.log('rendering the form', TEAMS[PR.current_tier].length, max_teams);
+	for ( let i = 1; i < max_teams; ++i ) {
+		const team_id = `rank${i}`;
+		const div_el = document.createElement('div');
+		div_el.classList.add('mb-3');
+		div_el.innerHTML = `
+		<label for="${team_id}" class="form-label">Rank ${i} Team</label>
+		<select data-rank="${i}" name="${team_id}" id="${team_id}" class="team-select form-select form-select-lg mb-3">
+			${team_options}
+		</select>
+		`;
+		team_form.appendChild(div_el);
+
+		if ( PR.current_tier in PR.working && i in PR.working[ PR.current_tier ] ) {
+			document.getElementById(team_id).selectedIndex = team_index_map[ 
+				PR.working[ PR.current_tier ][ i ]
+			];
+		}
+	}
+
+	// start an initial render
+	render();
+}
+
+function load_tiers_and_teams() {
+	if ( TIERS.length === 0 ) {
+		fetch('https://api.rscstream.com/tiers')
+			.then(res => res.json())
+			.then(data => {
+				for ( let i = 0; i < data.length; ++i ) {
+					TIERS.push(data[i].name);
+				}
+				
+				//console.log('loading teams now');
+				return load_tiers_and_teams();
+			});
+	}
+
+	//console.log('loading teams');
+
+	const tier_select = document.getElementById('tier');
+	let selected_tier_idx = 0;
+	if ( tier_select.options.length === 1 && TIERS.length ) {
+		for ( let i = 0; i < TIERS.length; ++i ) {
+			const el = document.createElement('option');
+			el.value = TIERS[i];
+			el.innerText = TIERS[i];
+			if ( TIERS[i] === PR.current_tier ) {
+				selected_tier_idx = i + 1;
+			}
+			tier_select.appendChild(el);
+		}
+	}
+
+	tier_select.selectedIndex = selected_tier_idx;
+
+	if ( TIERS.length > 0 && Object.keys(TEAMS).length === 0 ) {
+		for ( let i = 0; i < TIERS.length; ++i ) {
+			fetch(`https://api.rscstream.com/teams/${TIERS[i]}`)
+				.then(res => res.json())
+				.then(data => {
+					TEAMS[ TIERS[i] ] = data;
+					for ( let i = 0; i < data.length; ++i ) {
+						if ( ! (data[i].franchise in LOGOS) ) {
+							const fran = data[i].franchise.replaceAll(' ', '-',).toLowerCase();
+							LOGOS[ fran ] = new Image();
+							LOGOS[ fran ].src = `img/logos/${fran}.png`;
+						}
+						TEAM_MAP[`${data[i].tier}_${data[i].teamName}`] = data[i];
+					}
+					//console.log('setting data ready');
+					return DATA_READY = true;
+				});
+		}
+	}
+}
+
+function fetch_resources() {
+	load_tiers_and_teams();	
+}
+
+function render() {
+	//console.log('rendering');
+
+	RENDERED = new Image();
+	RENDERED.src = 'img/background.png';
+	RENDERED.addEventListener('load', render_image, false);
+}
+
+function render_image() {
+	//console.log('Beginning render...');
+	const pr_canvas = document.getElementById('powerrankings');
+	//const _instructionEl = document.querySelector('div.alert.empty');
+	//const _downloadEl = document.querySelector('div.alert.ready');
+	const ctx = pr_canvas.getContext('2d');
+	pr_canvas.width  = 1080;
+	pr_canvas.height = 1350;
+
+	ctx.drawImage(RENDERED, 0, 0);
+
+	if ( ! PR.current_tier ) {
+		return;
+	}
+
+	// starting coordinates
+	let logo_x = 115; // 620
+	let text_x = 226; // 729
+
+	const s_logo_y = 346;
+	const s_team_y = 380;
+
+	for ( const rank in PR.working[ PR.current_tier ] ) {
+		//console.log( `${PR.current_tier}_${PR.working[ PR.current_tier ][ rank ]}`, rank);
+		const team = TEAM_MAP[`${PR.current_tier}_${PR.working[ PR.current_tier ][ rank ]}`];
+		const t_name = team.teamName;
+		const fran_url = team.franchise.replaceAll(' ', '-').toLowerCase();
+		
+		// reset for second column
+		// TODO(erh): see if we can drop this column if we have < 9
+		let pos_mod = rank - 1;
+		if ( rank > 8 ) {
+			logo_x = 620;
+			text_x = 729;
+			pos_mod = pos_mod - 8;
+		}
+
+		const logo_y = s_logo_y + (pos_mod * 125);
+		const team_y = s_team_y + (pos_mod * 125);
+		const fran_y = team_y + 25;
+
+		ctx.drawImage(LOGOS[fran_url], logo_x, logo_y, 75, 75);
+
+		ctx.font = 'bold 24px Poppins';
+		ctx.fillText(t_name.toUpperCase(), text_x, team_y);
+
+		ctx.font = '17px Poppins';
+		ctx.fillText(team.franchise.toUpperCase(), text_x, fran_y);
+
+		/*
+		logo_y = logo_y + 125;
+		team_y = team_y + 125;
+		fran_y = team_y + 25;
+		*/
+	}
+
+	ctx.fillStyle = COLORS[ PR.current_tier ];
+	ctx.fillRect(95, 75, 340, 60);
+	ctx.beginPath();
+	ctx.arc(95, 105, 30, 0, 2 * Math.PI);
+	ctx.arc(435, 105, 30, 0, 2 * Math.PI);
+	ctx.fillStyle = COLORS[ PR.current_tier ];
+	ctx.fill();
+
+	ctx.font = 'bold 42px Poppins';
+	ctx.fillStyle = PR.current_tier === 'Master' ? '#FFFFFF' : '#000000';
+	ctx.textAlign = 'center';
+	ctx.fillText(PR.current_tier.toUpperCase(), 265, 120);
+	ctx.font = '42px Poppins';
+	ctx.fillStyle = '#ffffff';
+	ctx.textAlign = 'left';
+	// Season ##, Week #
+	ctx.fillText(`SEASON ${PR.season}, WEEK ${PR.current_week}`, 65, 260);
+}
+
+
+/* EVENT HANDLERS */
+function handle_setup_form(ev) {
+	ev.preventDefault();
+	const season_el = document.getElementById('season');
+	const season = parseInt(season_el.value.trim());
+	//console.log('Season is', season);
+	if ( season && season >= 17 && season < 50 ) {
+		PR.season = season;
+		save_pr_data();
+		set_application_state();
+	}
+}
+
+function handle_pr_form(ev) {
+	ev.preventDefault();
+	render();
+}
+
+function handle_pr_form_changes(ev) {
+	const target = ev.target;
+	if ( target.classList.contains('team-select') ) {
+		const rank = parseInt(target.dataset.rank);
+
+		PR.working[ PR.current_tier ][ rank ] = target.value;
+	}
+
+	save_pr_data();
+	return render();
+}
+
+// select/store week
+function handle_week_select(ev) {
+	const new_week = parseInt(ev.currentTarget.value);
+	if ( new_week !== PR.current_week ) {
+		const prev_week = PR.current_week;
+	
+		if ( ! ( PR.season in PR.data ) ) {
+			PR.data[ PR.season ] = {};
+		}
+		PR.data[ PR.season ][ prev_week ] = PR.working;
+
+		if ( new_week in PR.data[ PR.season ] ) {
+			PR.working = PR.data[ PR.season ][ new_week ];
+		} else {
+			PR.working = {};
+		}
+
+		PR.current_week = new_week;
+
+		PR.current_tier = null;
+		document.getElementById('tier').selectedIndex = 0;
+
+		save_pr_data();
+		load_pr_form_data();
+	}
+}
+
+function handle_tier_select(ev) {
+	if ( Object.keys(PR.working).length === 0 ) {
+		for ( let i = 0; i < TIERS.length; ++i ) {
+			PR.working[ TIERS[i] ] = {};
+		}
+	}
+
+	const new_tier = ev.currentTarget.value;
+	if ( PR.current_tier !== new_tier ) {
+		PR.current_tier = new_tier;
+	}
+
+	load_pr_form_data();
+}
+
