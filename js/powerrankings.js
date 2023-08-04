@@ -81,11 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('pr_form').addEventListener('change', handle_pr_form_changes);
 	document.getElementById('download_image').addEventListener('click', download_image);
 	document.getElementById('change_season').addEventListener('click', change_season);
+	document.getElementById('clear_storage').addEventListener('click', clear_storage);
 
 	// set up the application once DOM is loaded
 	fetch_resources();
 	load_saved_session();
 	set_application_state();
+	update_storage();
 });
 
 function download_image() {
@@ -167,12 +169,41 @@ function show_pr_form() {
 function save_pr_data() {
 	localStorage.setItem('rsc_powerrankings', JSON.stringify(PR));
 
+	update_storage();
+
 	return true;
+}
+
+function clear_storage() {
+	if ( confirm('Are you sure you want to clear your storage? You will lose all historical data.') ) {
+		localStorage.clear();
+		return window.location.reload();
+	}
+}
+
+function update_storage() {
+	let storageTotal = 0, xLen, x;
+	for (x in localStorage) {
+		if ( ! localStorage.hasOwnProperty(x) ) {
+			continue;
+		}
+		xLen = ((localStorage[x].length + x.length) * 2) / (1024 * 1024);
+		storageTotal += xLen;
+	}
+
+	if ( storageTotal > 9 ) {
+		alert('You have a ton of historical data stored and are almost out of space. Message blister for help.');
+	}
+
+	const percentage = (storageTotal / 10).toFixed(2);
+	storageTotal = storageTotal.toFixed(2);
+	document.getElementById('storage_used').innerText = `${storageTotal} MB`;
+	document.getElementById('storage_remaining').innerText = `${percentage}%`;
 }
 
 function get_max_teams() {
 	return DATA_READY && PR.current_tier ? 
-		Math.min(Math.max(TEAMS[PR.current_tier].length, 8), 16) : 0;
+		Math.min(Math.max(TEAMS[PR.current_tier].length - 1, 8), 16) : 0;
 }
 
 function load_pr_form_data(attempts = 1) {
@@ -217,7 +248,7 @@ function load_pr_form_data(attempts = 1) {
 		team_options += `
 		<option value="${team.teamName}">${team.teamName}</option>
 		`;
-		team_index_map[ team.teamName ] = i;
+		team_index_map[ team.teamName ] = i + 1;
 	}
 
 	//console.log('rendering the form', TEAMS[PR.current_tier].length, max_teams);
@@ -239,6 +270,8 @@ function load_pr_form_data(attempts = 1) {
 			];
 		}
 	}
+
+	set_pr_form_errors();
 
 	// start an initial render
 	render();
@@ -325,25 +358,56 @@ function render_image() {
 	}
 
 	// starting coordinates
+	let move_x = 115 - 60;
 	let logo_x = 115; // 620
 	let text_x = 226; // 729
+	let score_x = 450; // 729
 
 	const s_logo_y = 346;
 	const s_team_y = 380;
 
+	let prev_week = {};
+	const last_rank = {};
+	if ( PR.current_week > 1 ) {
+		const prev_week_num = PR.current_week - 1;
+		if ( PR.season in PR.data && prev_week_num in PR.data[PR.season] && PR.current_tier in PR.data[PR.season][prev_week_num] ) {
+			prev_week = PR.data[ PR.season ][ prev_week_num ][ PR.current_tier ];
+
+			for ( const rank in prev_week ) {
+				last_rank[ prev_week[rank] ] = rank;
+			}
+ 		}
+	}
 	for ( const rank in PR.working[ PR.current_tier ] ) {
 		//console.log( `${PR.current_tier}_${PR.working[ PR.current_tier ][ rank ]}`, rank);
 		const team = TEAM_MAP[`${PR.current_tier}_${PR.working[ PR.current_tier ][ rank ]}`];
 		const t_name = team.teamName;
 		const fran_url = team.franchise.replaceAll(' ', '-').toLowerCase();
-		
+
+		// calculate our delta and color
+		let draw_delta  = 0;
+		let delta_color = '#1cc117';
+		let delta_arrow = parseInt(2191, 16);
+		if ( PR.current_week > 1 && Object.keys(prev_week).length ) {
+			if ( t_name in last_rank ) {
+				draw_delta = last_rank[ t_name ] - rank;
+				if ( draw_delta < 0 ) {
+					draw_delta = draw_delta * -1; // normalize negatives
+					delta_color = '#d81c00';
+					delta_arrow = parseInt(2193, 16);
+				}
+			}
+		}
+
 		// reset for second column
 		// TODO(erh): see if we can drop this column if we have < 9
 		let pos_mod = rank - 1;
 		if ( rank > 8 ) {
+			move_x = 620 - 60;
 			logo_x = 620;
 			text_x = 729;
 			pos_mod = pos_mod - 8;
+			score_x = 953;
 		}
 
 		const logo_y = s_logo_y + (pos_mod * 125);
@@ -352,17 +416,29 @@ function render_image() {
 
 		ctx.drawImage(LOGOS[fran_url], logo_x, logo_y, 75, 75);
 
+		// team
+		ctx.fillStyle = '#000000';
 		ctx.font = 'bold 24px Poppins';
 		ctx.fillText(t_name.toUpperCase(), text_x, team_y);
 
+		// franchise
 		ctx.font = '17px Poppins';
 		ctx.fillText(team.franchise.toUpperCase(), text_x, fran_y);
+	
+		// scores
+		ctx.font = '20px Poppins';
+		if ( parseFloat(team.winPct) > 50 ) {
+			ctx.fillStyle = '#036602';
+		} else {
+			ctx.fillStyle = '#d81c00';
+		}
+		ctx.fillText(`${team.wins} / ${team.loss}`, score_x, fran_y + 10);
 
-		/*
-		logo_y = logo_y + 125;
-		team_y = team_y + 125;
-		fran_y = team_y + 25;
-		*/
+		ctx.font = 'bold 24px Poppins';
+		ctx.fillStyle = delta_color;
+		if ( draw_delta !== 0 ) {
+			ctx.fillText(String.fromCharCode(delta_arrow) + draw_delta, move_x, logo_y + 10);
+		}
 	}
 
 	ctx.fillStyle = COLORS[ PR.current_tier ];
@@ -403,12 +479,29 @@ function handle_pr_form(ev) {
 	render();
 }
 
+function set_pr_form_errors() {
+	const team_ranks = document.querySelectorAll('.team-select');
+	for ( let i = 0; i < team_ranks.length; ++i ) {
+		const used = Object.values(PR.working[PR.current_tier]).filter(e => team_ranks[i].value === e).length;
+		if ( used > 1 ) {
+			team_ranks[i].classList.add('bg-danger');
+		} else {
+			team_ranks[i].classList.remove('bg-danger');
+		}
+	}
+}
+
 function handle_pr_form_changes(ev) {
 	const target = ev.target;
 	if ( target.classList.contains('team-select') ) {
 		const rank = parseInt(target.dataset.rank);
 
 		PR.working[ PR.current_tier ][ rank ] = target.value;
+
+		const used = Object.values(PR.working[PR.current_tier]).filter(e => target.value === e).length;
+		console.log(Object.values(PR.working[PR.current_tier]),target.value, used);
+
+		set_pr_form_errors();
 	}
 
 	save_pr_data();
@@ -419,23 +512,39 @@ function handle_pr_form_changes(ev) {
 function handle_week_select(ev) {
 	const new_week = parseInt(ev.currentTarget.value);
 	if ( new_week !== PR.current_week ) {
-		const prev_week = PR.current_week;
+		const cur_week = PR.current_week;
 	
 		if ( ! ( PR.season in PR.data ) ) {
 			PR.data[ PR.season ] = {};
 		}
-		PR.data[ PR.season ][ prev_week ] = PR.working;
+		// if we don't clone the object, it will be used as a reference
+		// and break everything
+		PR.data[ PR.season ][ cur_week ] = { ...PR.working };
 
 		if ( new_week in PR.data[ PR.season ] ) {
 			PR.working = PR.data[ PR.season ][ new_week ];
+			//console.log('exists');
+			//console.log(PR.working[PR.current_tier]);
 		} else {
-			PR.working = {};
+			//console.log('use previous week', PR.data[PR.season][cur_week]);
+			let prev_week = null;
+			if ( new_week > 1 ) {
+				prev_week = new_week - 1;
+			}
+			if ( prev_week in PR.data[PR.season] ) {
+				PR.working = { ...PR.data[PR.season][prev_week] };
+			} else if ( cur_week in PR.data[PR.season] ) {
+				PR.working = { ...PR.data[PR.season][cur_week] };
+			} else {
+				PR.working = {};
+			}
+			// default to the previous week
 		}
 
 		PR.current_week = new_week;
 
-		PR.current_tier = null;
-		document.getElementById('tier').selectedIndex = 0;
+		//PR.current_tier = null;
+		//document.getElementById('tier').selectedIndex = 0;
 
 		save_pr_data();
 		load_pr_form_data();
