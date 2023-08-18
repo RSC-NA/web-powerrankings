@@ -94,7 +94,7 @@ function download_image() {
 	const canvas = document.getElementById('powerrankings');
 	image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
 	const link = document.createElement('a');
-	const imageName = `${document.getELementById('tier').value}-${document.getElementById('week').value}.png`;
+	const imageName = `${document.getElementById('tier').value}-${document.getElementById('week').value}.png`;
 	link.download = imageName;
 	link.href = image;
 	link.click();
