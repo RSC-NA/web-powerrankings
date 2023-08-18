@@ -203,7 +203,7 @@ function update_storage() {
 
 function get_max_teams() {
 	return DATA_READY && PR.current_tier ? 
-		Math.min(Math.max(TEAMS[PR.current_tier].length - 1, 8), 16) : 0;
+		Math.min(Math.max(TEAMS[PR.current_tier].length, 8), 16) : 0;
 }
 
 function load_pr_form_data(attempts = 1) {
@@ -252,7 +252,7 @@ function load_pr_form_data(attempts = 1) {
 	}
 
 	//console.log('rendering the form', TEAMS[PR.current_tier].length, max_teams);
-	for ( let i = 1; i < max_teams; ++i ) {
+	for ( let i = 1; i <= max_teams; ++i ) {
 		const team_id = `rank${i}`;
 		const div_el = document.createElement('div');
 		div_el.classList.add('mb-3');
