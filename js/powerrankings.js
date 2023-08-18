@@ -317,7 +317,7 @@ function load_tiers_and_teams() {
 					TEAMS[ TIERS[i] ] = data;
 					for ( let i = 0; i < data.length; ++i ) {
 						if ( ! (data[i].franchise in LOGOS) ) {
-							const fran = data[i].franchise.replaceAll(' ', '-',).toLowerCase();
+							const fran = data[i].franchise;
 							LOGOS[ fran ] = new Image();
 							LOGOS[ fran ].src = `img/logos/${fran}.png`;
 						}
