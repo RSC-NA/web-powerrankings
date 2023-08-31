@@ -338,7 +338,7 @@ function render() {
 	//console.log('rendering');
 
 	RENDERED = new Image();
-	RENDERED.src = 'img/background.png';
+	RENDERED.src = 'img/background-transparent.png';
 	RENDERED.addEventListener('load', render_image, false);
 }
 
@@ -350,12 +350,15 @@ function render_image() {
 	const ctx = pr_canvas.getContext('2d');
 	pr_canvas.width  = 1080;
 	pr_canvas.height = 1350;
-
-	ctx.drawImage(RENDERED, 0, 0);
-
+	
 	if ( ! PR.current_tier ) {
 		return;
 	}
+	
+	ctx.fillStyle = COLORS[PR.current_tier];
+	ctx.fillRect(0,0, pr_canvas.width, pr_canvas.height);
+
+	ctx.drawImage(RENDERED, 0, 0);
 
 	// starting coordinates
 	let move_x = 115 - 60;
