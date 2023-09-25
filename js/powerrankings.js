@@ -251,25 +251,55 @@ function load_pr_form_data(attempts = 1) {
 		team_index_map[ team.teamName ] = i + 1;
 	}
 
+	// calculate the deltas to put in the form
+	let prev_week = {};
+	const last_rank = {};
+	if ( PR.current_week > 1 ) {
+		const prev_week_num = PR.current_week - 1;
+		if ( PR.season in PR.data && prev_week_num in PR.data[PR.season] && PR.current_tier in PR.data[PR.season][prev_week_num] ) {
+			prev_week = PR.data[ PR.season ][ prev_week_num ][ PR.current_tier ];
+
+			for ( const rank in prev_week ) {
+				last_rank[ prev_week[rank] ] = rank;
+			}
+ 		}
+	}
 	//console.log('rendering the form', TEAMS[PR.current_tier].length, max_teams);
 	for ( let i = 1; i <= max_teams; ++i ) {
 		const team_id = `rank${i}`;
 		const div_el = document.createElement('div');
 		div_el.classList.add('mb-3');
 		div_el.innerHTML = `
-		<label for="${team_id}" class="form-label">Rank ${i} Team</label>
-		<select data-rank="${i}" name="${team_id}" id="${team_id}" class="team-select form-select form-select-lg mb-3">
-			${team_options}
-		</select>
+		<div class="row">
+			<div class="col-10">
+				<label for="${team_id}" class="form-label">Rank ${i} Team</label>
+				<select data-rank="${i}" name="${team_id}" id="${team_id}" class="team-select form-select form-select-lg">
+					${team_options}
+				</select>
+			</div>
+			<div class="col-2">
+				<label for="${team_id}_delta" class="form-label">Rank ${i} Δ</label>
+				<input type="number" name="${team_id}_delta" id="${team_id}_delta" class="form-control form-control-lg" value="" min="-16" max="16">
+			</div>
+		</div>
 		`;
 		team_form.appendChild(div_el);
-
+		//console.log('working', i, PR.working[PR.current_tier], team_index_map);
 		if ( PR.current_tier in PR.working && i in PR.working[ PR.current_tier ] ) {
+ 			const curr_team = PR.working[ PR.current_tier ][i];
 			document.getElementById(team_id).selectedIndex = team_index_map[ 
 				PR.working[ PR.current_tier ][ i ]
 			];
+			if ( curr_team && curr_team in last_rank ) {
+				const last_rank_score = parseInt(last_rank[curr_team]);
+				const delta_score = last_rank_score - i;
+				document.getElementById(`${team_id}_delta`).value = delta_score;
+			}
 		}
+
+
 	}
+
 
 	set_pr_form_errors();
 
@@ -392,13 +422,17 @@ function render_image() {
 		let delta_color = '#1cc117';
 		let delta_arrow = parseInt(2191, 16);
 		if ( PR.current_week > 1 && Object.keys(prev_week).length ) {
-			if ( t_name in last_rank ) {
+			const delta_el = document.getElementById(`rank${rank}_delta`);
+			if ( delta_el && delta_el.value ) {
+				draw_delta = parseInt(delta_el.value);
+			} else if ( t_name in last_rank ) {
 				draw_delta = last_rank[ t_name ] - rank;
-				if ( draw_delta < 0 ) {
-					draw_delta = draw_delta * -1; // normalize negatives
-					delta_color = '#d81c00';
-					delta_arrow = parseInt(2193, 16);
-				}
+			}
+		
+			if ( draw_delta < 0 ) {
+				draw_delta = draw_delta * -1; // normalize negatives
+				delta_color = '#d81c00';
+				delta_arrow = parseInt(2193, 16);
 			}
 		}
 
