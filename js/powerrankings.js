@@ -547,6 +547,7 @@ function handle_pr_form_changes(ev) {
 
 // select/store week
 function handle_week_select(ev) {
+	console.log('New Week', ev.currentTarget.value);
 	const new_week = parseInt(ev.currentTarget.value);
 	if ( new_week !== PR.current_week ) {
 		const cur_week = PR.current_week;
