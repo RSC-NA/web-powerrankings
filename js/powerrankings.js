@@ -561,10 +561,10 @@ function handle_week_select(ev) {
 
 		if ( new_week in PR.data[ PR.season ] ) {
 			PR.working = PR.data[ PR.season ][ new_week ];
-			//console.log('exists');
-			//console.log(PR.working[PR.current_tier]);
+			console.log('exists');
+			console.log(PR.working[PR.current_tier]);
 		} else {
-			//console.log('use previous week', PR.data[PR.season][cur_week]);
+			console.log('use previous week', PR.data[PR.season][cur_week]);
 			let prev_week = null;
 			if ( new_week > 1 ) {
 				prev_week = new_week - 1;
