@@ -561,7 +561,7 @@ function handle_week_select(ev) {
 		PR.data[ PR.season ][ cur_week ] = { ...PR.working };
 
 		if ( new_week in PR.data[ PR.season ] ) {
-			PR.working = PR.data[ PR.season ][ new_week ];
+			PR.working = { ...PR.data[ PR.season ][ new_week ] };
 			console.log('exists');
 			console.log(PR.working[PR.current_tier]);
 		} else {
