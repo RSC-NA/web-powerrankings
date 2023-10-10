@@ -279,7 +279,7 @@ function load_pr_form_data(attempts = 1) {
 			</div>
 			<div class="col-2">
 				<label for="${team_id}_delta" class="form-label">Rank ${i} Δ</label>
-				<input type="number" name="${team_id}_delta" id="${team_id}_delta" class="form-control form-control-lg" value="" min="-16" max="16">
+				<input type="number" name="${team_id}_delta" id="${team_id}_delta" class="team-delta form-control form-control-lg" value="" min="-16" max="16">
 			</div>
 		</div>
 		`;
@@ -421,7 +421,7 @@ function render_image() {
 		let draw_delta  = 0;
 		let delta_color = '#1cc117';
 		let delta_arrow = parseInt(2191, 16);
-		if ( PR.current_week > 1 && Object.keys(prev_week).length ) {
+		if ( PR.current_week > 1 ) {
 			const delta_el = document.getElementById(`rank${rank}_delta`);
 			if ( delta_el && delta_el.value ) {
 				draw_delta = parseInt(delta_el.value);
@@ -539,6 +539,7 @@ function handle_pr_form_changes(ev) {
 		console.log(Object.values(PR.working[PR.current_tier]),target.value, used);
 
 		set_pr_form_errors();
+	} else if ( target.classList.contains('team-delta') ) {
 	}
 
 	save_pr_data();
