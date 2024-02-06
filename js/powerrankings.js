@@ -309,7 +309,7 @@ function load_pr_form_data(attempts = 1) {
 
 function load_tiers_and_teams() {
 	if ( TIERS.length === 0 ) {
-		fetch('https://api.rscstream.com/tiers')
+		fetch('https://devleague.rscna.com/tiers')
 			.then(res => res.json())
 			.then(data => {
 				for ( let i = 0; i < data.length; ++i ) {
@@ -341,7 +341,7 @@ function load_tiers_and_teams() {
 
 	if ( TIERS.length > 0 && Object.keys(TEAMS).length === 0 ) {
 		for ( let i = 0; i < TIERS.length; ++i ) {
-			fetch(`https://api.rscstream.com/teams/${TIERS[i]}`)
+			fetch(`https://devleague.rscna.com/teams/${TIERS[i]}`)
 				.then(res => res.json())
 				.then(data => {
 					TEAMS[ TIERS[i] ] = data;
