@@ -73,7 +73,7 @@ const COLORS = {
 // main program entry point. DOMContentLoaded
 // attaches event handlers, then kicks off with 
 // load_saved_session();
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 	document.getElementById('setup_form').addEventListener('submit', handle_setup_form);
 	document.getElementById('pr_form').addEventListener('submit', handle_pr_form);
 	document.getElementById('week').addEventListener('change', handle_week_select);
@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('clear_storage').addEventListener('click', clear_storage);
 
 	// set up the application once DOM is loaded
-	fetch_resources();
+	await fetch_resources();
 	load_saved_session();
 	set_application_state();
 	update_storage();
@@ -307,18 +307,31 @@ function load_pr_form_data(attempts = 1) {
 	render();
 }
 
-function load_tiers_and_teams() {
+async function load_tiers_and_teams() {
 	if ( TIERS.length === 0 ) {
-		fetch('https://devleague.rscna.com/tiers')
-			.then(res => res.json())
-			.then(data => {
-				for ( let i = 0; i < data.length; ++i ) {
-					TIERS.push(data[i].name);
-				}
-				
-				//console.log('loading teams now');
-				return load_tiers_and_teams();
-			});
+		// const response_json = await fetch('https://devleague.rscna.com/tiers');
+		// const data = await response_json.json();
+		// https://api.rscna.com/api/v1/tiers/?league=1
+		const data = await fetch('https://api.rscna.com/api/v1/tiers/?format=json&league=1').then(res => res.json());
+		//const data = await fetch('https://api.rscna.com/api/v1/franchises/?format=json&league=1').then(res => res.json());
+		// const data = await response_json.json();
+		console.log('fetch complete!');
+		console.log(data);
+
+		if (data) {
+			for ( let i = 0; i < data.length; ++i ) {
+				TIERS.push(data[i].name);
+			}
+		}
+			// .then(res => res.json())
+			// .then(data => {
+			// 	for ( let i = 0; i < data.length; ++i ) {
+			// 		TIERS.push(data[i].name);
+			// 	}
+			// 	
+			// 	//console.log('loading teams now');
+			// 	return load_tiers_and_teams();
+			// });
 	}
 
 	//console.log('loading teams');
@@ -347,9 +360,9 @@ function load_tiers_and_teams() {
 					TEAMS[ TIERS[i] ] = data;
 					for ( let i = 0; i < data.length; ++i ) {
 						if ( ! (data[i].franchise in LOGOS) ) {
-							const fran = data[i].franchise;
+							const fran = data[i].franchise.replaceAll(' ', '-');
 							LOGOS[ fran ] = new Image();
-							LOGOS[ fran ].src = `img/logos/${fran}.png`;
+							LOGOS[ fran ].src = `https://devleague.rscna.com/logo/${fran}.png`;
 						}
 						TEAM_MAP[`${data[i].tier}_${data[i].teamName}`] = data[i];
 					}
@@ -360,8 +373,8 @@ function load_tiers_and_teams() {
 	}
 }
 
-function fetch_resources() {
-	load_tiers_and_teams();	
+async function fetch_resources() {
+	await load_tiers_and_teams();	
 }
 
 function render() {
