@@ -428,7 +428,7 @@ function render_image() {
 		//console.log( `${PR.current_tier}_${PR.working[ PR.current_tier ][ rank ]}`, rank);
 		const team = TEAM_MAP[`${PR.current_tier}_${PR.working[ PR.current_tier ][ rank ]}`];
 		const t_name = team.teamName;
-		const fran_url = team.franchise;
+		const fran_url = team.franchise.replaceAll(' ', '-');
 
 		// calculate our delta and color
 		let draw_delta  = 0;
